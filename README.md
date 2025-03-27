@@ -15,20 +15,20 @@
   <summary>Sumário</summary>
   <ol>
     <li>
-      <a href="#about-the-project">Sobre o projeto</a>
+      <a href="#sobre-o-projeto">Sobre o projeto</a>
       <ul>
-        <li><a href="#built-with">Construção</a></li>
+        <li><a href="#construcao">Construção</a></li>
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Requisitos</a>
+      <a href="#requisitos">Requisitos</a>
       <ul>
-        <li><a href="#prerequisites">Pré-Requisitos</a></li>
-        <li><a href="#installation">Instalação</a></li>
+        <li><a href="#pre-requisitos">Pré-Requisitos</a></li>
+        <li><a href="#instalacao">Instalação</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Objetivo</a></li>
-    <li><a href="#acknowledgments">Bibliografia</a></li>
+    <li><a href="#objetivo">Objetivo</a></li>
+    <li><a href="#bibliografia">Bibliografia</a></li>
   </ol>
 </details>
 
