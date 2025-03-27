@@ -1,7 +1,3 @@
-[![Contributors][contributors-shield]][contributors-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-
   <h3 align="center">dIAgnostic</h3>
 
   <p align="center">
@@ -17,17 +13,16 @@
     <li>
       <a href="#sobre-o-projeto">Sobre o projeto</a>
       <ul>
-        <li><a href="#construcao">Construção</a></li>
+        <li><a href="#construcao">Construcao</a></li>
       </ul>
     </li>
     <li>
       <a href="#requisitos">Requisitos</a>
       <ul>
         <li><a href="#pre-requisitos">Pré-Requisitos</a></li>
-        <li><a href="#instalacao">Instalação</a></li>
+        <li><a href="#instalacao">Instalacao</a></li>
       </ul>
     </li>
-    <li><a href="#objetivo">Objetivo</a></li>
     <li><a href="#bibliografia">Bibliografia</a></li>
   </ol>
 </details>
@@ -68,7 +63,7 @@ Contribuintes:
 
 Para realização do projeto será necessário:
 
-### prerequisites
+### Pre-Requisitos
 
 * Instalar o Flutter
 * Instalar o Dart
@@ -76,7 +71,7 @@ Para realização do projeto será necessário:
 * Instalar o Python
 * Instalar o MySQL
 
-### Instalação
+### Instalacao
 
 <!-- ACKNOWLEDGMENTS -->
 ## Bibliografia
