@@ -2,14 +2,6 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 
-
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
   <h3 align="center">dIAgnostic</h3>
 
   <p align="center">
@@ -41,9 +33,8 @@
 </details>
 
 
-
 <!-- ABOUT THE PROJECT -->
-## Sobre o projetos
+## Sobre o projeto
 
 O projeto dIAgnostic tem como objetivo criar um aplicativo que possa facilitar o uso e o acesso às informações relacionadas a saúde do usuário. 
 
@@ -54,9 +45,19 @@ Os benefícios serão:
 
 O aplicativo não visa medicar ou detectar qualquer problema de saúde, mas sim alertar o usuário sobre possíveis condições e informar de maneira breve o que pode ser visto no exame.
 
-### Feito com
+Contribuintes:
+* Maria Fernanda
+* Willian
+* Guilherme
+* Pedro
+* Murilo
+* Leandro
+* Bruno
+* Rogério
+* Nicolas
+* Cauã
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+### Feito com
 
 * Flutter
 * Python
@@ -67,7 +68,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 Para realização do projeto será necessário:
 
-### Pré-Requisitos
+### prerequisites
 
 * Instalar o Flutter
 * Instalar o Dart
