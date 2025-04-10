@@ -56,6 +56,7 @@ Contribuintes:
 
 * Flutter
 * Python
+* Jupyther
 * MySQL
 
 <!-- GETTING STARTED -->
