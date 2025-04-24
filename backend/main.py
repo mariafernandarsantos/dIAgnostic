@@ -44,10 +44,8 @@ async def lifespan(app: FastAPI):
         
         # Load diabetes model and scaler
         with open("diabetes_model.sav", "rb") as model_file:
-            print("Loading: ", model_file)
             diabetes_model = pickle.load(model_file)
         with open("diabetes_scaler.sav", "rb") as scaler_file:
-            print("Loading 2: ", scaler_file)
             diabetes_scaler = pickle.load(scaler_file)
         print("Diabetes model and scaler loaded successfully!")
     except Exception as e:
@@ -149,7 +147,6 @@ async def predict_diabetes(input_data: DiabetesInput):
     Returns:
         JSON with diagnosis and probability
     """
-    print("AAAAAAAAAA", diabetes_model, diabetes_scaler)
     if diabetes_model is None or diabetes_scaler is None:
         raise HTTPException(status_code=500, detail="Diabetes model or scaler not loaded")
     
