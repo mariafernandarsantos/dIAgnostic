@@ -2,7 +2,7 @@ from tensorflow.keras.models import load_model
 import numpy as np
 import cv2
 
-model = load_model('./models/saved_models/pneumonia_detection_model.h5')
+model = load_model('./models/pneumonia_detection_model.h5')
 
 def preprocess_image(image_path):
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
@@ -26,5 +26,5 @@ def predict_pneumonia(image_path):
     
     return result, confidence
 
-result, confidence = predict_pneumonia('./ml_pipeline/dataset/IM-0003-0001.jpeg')
+result, confidence = predict_pneumonia('./ml_pipeline/test_images/IM-0003-0001.jpeg')
 print(f"Diagnosis: {result} (Confidence: {confidence:.2f})")
