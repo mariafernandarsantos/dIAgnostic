@@ -35,23 +35,22 @@ git clone https://github.com/mariafernandarsantos/dIAgnostic.git
 cd dIAgnostic/backend
 ```
 
-2. (Opcional) Crie e ative um ambiente virtual:
+2. Instale as dependências do projeto
 ```bash
-python -m venv venv
+# Utilize uv package manager
+pip install uv
 
-# Linux/Mac
-source venv/bin/activate
+# Criar ambiente
+uv venv
 
-# Windows
-venv\Scripts\activate
+# Ativar ambiente
+.venv\Scripts\activate
+
+# Instalar as dependências
+uv pip install -r requirements.txt
 ```
 
-3. Instale as dependências do projeto
-```bash
-pip install -r requirements.txt
-```
-
-4. Certifique-se de ter os arquivos de modelo:
+3. Certifique-se de ter os arquivos de modelo:
 
 `pneumonia_detection_model.h5`
 
