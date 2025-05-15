@@ -2,6 +2,8 @@ import 'package:diaglogin/inicio.dart';
 import 'package:flutter/material.dart';
 import 'registrar.dart';
 import 'recuperar.dart';
+import 'package:http/http.dart' as http;
+import 'api_service.dart';
 class Login extends StatefulWidget {
   @override
   State<Login> createState() => _Login();
@@ -11,6 +13,39 @@ class _Login extends State<Login> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController senhaController = TextEditingController();
   bool lembrarMe = false;
+  bool isLoading = false;
+  String? errorMessage;
+
+  Future<void> _login() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
+    });
+
+    try {
+      final response = await ApiService.login(
+        emailController.text,
+        senhaController.text,
+      );
+
+      // Se o login for bem-sucedido, navegue para a tela inicial
+      if (response['access_token'] != null) {
+        // Aqui você pode armazenar o token (por exemplo, usando SharedPreferences)
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Inicio()),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString().replaceAll('Exception: ', '');
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +97,14 @@ class _Login extends State<Login> {
                         ),
                       ],
                     ),
+                    if (errorMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          errorMessage!,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
                     TextField(
                       controller: emailController,
                       decoration: const InputDecoration(
@@ -121,27 +164,21 @@ class _Login extends State<Login> {
                     ),
                     const SizedBox(height: 10),
                     ElevatedButton(
-                      onPressed: () {
-                        print('Email: ${emailController.text}');
-                        print('Senha: ${senhaController.text}');
-                        print('Fazer login');
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) => Inicio()),
-                        );
-                      },
+                      onPressed: isLoading ? null : _login,
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(50),
                         backgroundColor: Color.fromARGB(255, 117, 167, 189),
                       ),
-                      child: const Text(
-                        'FAZER LOGIN',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: isLoading
+                          ?CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                            'FAZER LOGIN',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                              color: Colors.white,
+                            ),
+                          ),
                     ),
                     const SizedBox(height: 10),
                   ],

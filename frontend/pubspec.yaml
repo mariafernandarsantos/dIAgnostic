@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  http: ^1.4.0
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -18,4 +20,5 @@ dev_dependencies:
 flutter:
   assets:
     - assets/
+    - assets/.env
   uses-material-design: true

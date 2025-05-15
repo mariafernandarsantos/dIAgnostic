@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'api_service.dart';
 
 
 class Registrar extends StatefulWidget {
@@ -7,12 +8,54 @@ class Registrar extends StatefulWidget {
 }
 
 class _Registrar extends State<Registrar> {
+  final TextEditingController nomeController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController senhaController = TextEditingController();
   final TextEditingController telefoneController = TextEditingController();
   final TextEditingController datanascimento = TextEditingController();
 
   String? generoSelecionado;
+  bool isLoading = false;
+  String? errorMessage;
+
+  Future<void> _registrar() async {
+    // Validação básica dos campos
+    if (nomeController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        senhaController.text.isEmpty) {
+      setState(() {
+        errorMessage = 'Por favor, preencha todos os campos obrigatórios';
+      });
+      return;
+    }
+
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
+    });
+
+    try {
+      final response = await ApiService.register(
+        nomeController.text,
+        emailController.text,
+        senhaController.text,
+      );
+
+      Navigator.pop(context); // Volta para a tela de login
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registro realizado com sucesso!')),
+      );
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString().replaceAll('Exception: ', '');
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +85,26 @@ class _Registrar extends State<Registrar> {
                   children: [
                     TextField(
                       controller: emailController,
+                      decoration: const InputDecoration(
+                        hintText: 'Email',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    TextField(
+                      controller: nomeController,
+                      decoration: const InputDecoration(
+                        hintText: 'Nome completo',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                         hintText: 'Email',
                         filled: true,
@@ -127,15 +190,21 @@ class _Registrar extends State<Registrar> {
                     ),
                     const SizedBox(height: 10),
                     ElevatedButton(
-                      onPressed: () {
-                        print('Criar conta:');
-                        print('Email: ${emailController.text}');
-                        print('Senha: ${senhaController.text}');
-                        print('Telefone: ${telefoneController.text}');
-                        print('Gênero: $generoSelecionado');
-                        print('DataNascimento: ${datanascimento.text}');
-                      },
-                      child: const Text('CRIAR CONTA'),
+                      onPressed: isLoading ? null : _registrar,
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size.fromHeight(50),
+                        backgroundColor: Colors.white,
+                      ),
+                      child: isLoading
+                          ? CircularProgressIndicator()
+                          : const Text(
+                              'CRIAR CONTA',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
+                                color: Colors.black,
+                              ),
+                            ),
                     ),
                   ],
                 ),
