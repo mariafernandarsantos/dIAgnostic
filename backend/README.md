@@ -1,6 +1,6 @@
 # dIAgnostic API
 
-Uma API REST construída com FastAPI para diagnóstico médico, incluindo **detecção de pneumonia** a partir de imagens de raio-X e **predição de diabetes** a partir de dados clínicos. 
+Uma API REST construída com FastAPI para diagnóstico médico, incluindo **detecção de pneumonia** a partir de imagens de raio-X e **predição de diabetes** a partir de dados clínicos.
 
 ## 🧠 Visão Geral
 
@@ -18,7 +18,7 @@ Esta API permite:
 
 ## 🧰 Tecnologias e Requisitos
 
-- Python 3.8+
+- Python 3.11
 - [FastAPI](https://fastapi.tiangolo.com/)
 - Uvicorn
 - TensorFlow
@@ -36,6 +36,7 @@ cd dIAgnostic/backend
 ```
 
 2. Instale as dependências do projeto
+
 ```bash
 # Utilize uv package manager
 pip install uv
@@ -60,7 +61,6 @@ uv pip install -r requirements.txt
 
 Esses arquivos devem estar no diretório raiz do backend. Se desejar treinar os modelos, consulte os notebooks de treinamento disponíveis no repositório.
 
-
 ## Uso
 
 ### Iniciando a API
@@ -68,9 +68,7 @@ Esses arquivos devem estar no diretório raiz do backend. Se desejar treinar os 
 Execute o seguinte comando no diretório do projeto:
 
 ```bash
-uvicorn main:app --reload
-# ou
-python main.py
+uvicorn app.main:app --reload
 ```
 
 A API estará disponível em `http://localhost:8000`
@@ -79,6 +77,8 @@ A API estará disponível em `http://localhost:8000`
 
 `GET | /`: Mensagem de boas-vindas e descrição da API
 `GET | /health`: Verifica se a API e os modelos estão ativos
+`POST | /auth/register`: Registra um novo usuário no sistema.
+`POST | /auth/login`: Autentica um usuário e retorna um token de acesso.
 `POST | /predict/pneumonia`: Envia uma imagem para diagnóstico
 `POST | /predict/diabetes`: Envia dados clínicos para diagnóstico
 
@@ -110,21 +110,26 @@ A API retorna uma resposta JSON com a seguinte estrutura:
 
 ```json
 {
-  "filename": "exemplo.jpg",
   "diagnosis": "PNEUMONIA",
-  "confidence": 0.9527,
-  "raw_prediction": 0.9527
+  "explanation": null,
+  "filename": "person1005_virus_1688.jpeg",
+  "confidence": 0.9890651702880859,
+  "raw_prediction": 0.9890651702880859,
+  "mensagem": "Pneumonia detectada"
 }
 ```
 
 - `filename`: O nome do arquivo enviado
+- `explanation`: Explicação detalhada sobre a imagem
 - `diagnosis`: "PNEUMONIA" ou "NORMAL"
 - `confidence`: O nível de confiança (0-1) para a predição
 - `raw_prediction`: A saída bruta do modelo
+- `mensagem`: Predição
 
 ### Predição de Diabetes
 
 Corpo da requisição (JSON):
+
 ```json
 {
   "pregnancies": 2,
@@ -137,7 +142,9 @@ Corpo da requisição (JSON):
   "age": 40
 }
 ```
+
 cURL:
+
 ```bash
 curl -X POST http://localhost:8000/predict/diabetes \
      -H "Content-Type: application/json" \
@@ -145,6 +152,7 @@ curl -X POST http://localhost:8000/predict/diabetes \
 ```
 
 Python:
+
 ```python
 import requests
 
@@ -157,21 +165,23 @@ data = {
     "insulin": 100,
     "bmi": 28.5,
     "diabetes_pedigree": 0.3,
-    "age": 40
+    "age": 40,
+    "get_explanation": false
 }
 response = requests.post(url, json=data)
 print(response.json())
 ```
 
 Resposta esperada:
+
 ```json
 {
-  "diagnosis": "NEGATIVE",
-  "probability": 0.1562,
-  "message": "No diabetes detected"
+  "diagnosis": "NEGATIVO",
+  "explanation": null,
+  "probability": 0.13,
+  "message": "Diabetes não detectado"
 }
 ```
-
 
 ## Documentação da API
 
@@ -181,6 +191,7 @@ O FastAPI gera automaticamente documentação interativa da API:
 - ReDoc: http://localhost:8000/redoc
 
 ## TODO produção
+
 1. Ajuste nas configurações CORS na seção `app.add_middleware`
 2. Configure autenticação adequada
 3. Use um servidor ASGI de nível de produção como Gunicorn com workers Uvicorn
