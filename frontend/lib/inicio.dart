@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class Inicio extends StatefulWidget {
+  final String nomeUsuario;
+
+  const Inicio({super.key, required this.nomeUsuario});
+
   @override
   State<Inicio> createState() => _InicioState();
 }
@@ -69,8 +73,8 @@ class _InicioState extends State<Inicio> {
                         Row(
                           children: [
                             Expanded(
-                              child: const Text(
-                                'Rogério de Morais',
+                              child: Text(
+                                widget.nomeUsuario,
                                 style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,

@@ -7,7 +7,7 @@ class ApiService {
 
   static Future<Map<String, dynamic>> login(String email, String password) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl/login'),
+      Uri.parse('$_baseUrl/auth/login'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'email': email,
@@ -22,22 +22,19 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> register(
-      String name, String email, String password) async {
+  static Future<http.Response> register(String nome, String email, String senha) async {
+    final url = Uri.parse('$_baseUrl/auth/register');
+
     final response = await http.post(
-      Uri.parse('$_baseUrl/register'),
+      url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        'name': name,
+        'name': nome,
         'email': email,
-        'password': password,
+        'password': senha,
       }),
     );
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha no registro: ${response.body}');
-    }
+    return response;
   }
 }

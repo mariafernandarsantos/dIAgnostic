@@ -2,8 +2,8 @@ import 'package:diaglogin/inicio.dart';
 import 'package:flutter/material.dart';
 import 'registrar.dart';
 import 'recuperar.dart';
-import 'package:http/http.dart' as http;
 import 'api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class Login extends StatefulWidget {
   @override
   State<Login> createState() => _Login();
@@ -28,13 +28,24 @@ class _Login extends State<Login> {
         senhaController.text,
       );
 
-      // Se o login for bem-sucedido, navegue para a tela inicial
-      if (response['access_token'] != null) {
-        // Aqui você pode armazenar o token (por exemplo, usando SharedPreferences)
+      if (response != null && response['access_token'] != null) {
+        final String token = response['access_token'];
+        final String nome = response['nome'];
+
+        await saveToken(token);
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('nome_usuario', nome);
+
+        // Navegar para a tela inicial
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Inicio()),
+          MaterialPageRoute(builder: (context) => Inicio(nomeUsuario: nome)),
         );
+      } else {
+        setState(() {
+          errorMessage = 'Erro desconhecido';
+        });
       }
     } catch (e) {
       setState(() {
@@ -45,6 +56,16 @@ class _Login extends State<Login> {
         isLoading = false;
       });
     }
+  }
+
+  Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('access_token');
+  }
+
+  Future<void> saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('access_token', token);
   }
 
   @override

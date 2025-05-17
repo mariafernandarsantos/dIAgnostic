@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'api_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class Registrar extends StatefulWidget {
@@ -19,7 +20,6 @@ class _Registrar extends State<Registrar> {
   String? errorMessage;
 
   Future<void> _registrar() async {
-    // Validação básica dos campos
     if (nomeController.text.isEmpty ||
         emailController.text.isEmpty ||
         senhaController.text.isEmpty) {
@@ -40,12 +40,20 @@ class _Registrar extends State<Registrar> {
         emailController.text,
         senhaController.text,
       );
-
-      Navigator.pop(context); // Volta para a tela de login
       
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Registro realizado com sucesso!')),
-      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registro realizado com sucesso!')),
+          );
+          Navigator.pop(context); // Volta para a tela de login
+        }
+      } else {
+        final responseBody = response.body;
+        setState(() {
+          errorMessage = 'Erro: ${response.statusCode} - $responseBody';
+        });
+      }
     } catch (e) {
       setState(() {
         errorMessage = e.toString().replaceAll('Exception: ', '');

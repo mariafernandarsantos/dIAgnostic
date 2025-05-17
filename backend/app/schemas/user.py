@@ -18,6 +18,7 @@ class TokenResponse(BaseModel):
     """Esquema para resposta de token após login."""
     access_token: str
     token_type: str = "bearer"
+    nome: str
 
 class User(BaseModel):
     """Esquema para representação de usuário."""

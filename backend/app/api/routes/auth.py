@@ -63,4 +63,4 @@ async def login(user: UserLogin, db: AsyncSession = Depends(get_db)):
 
     # Criar token de acesso
     token = create_access_token({"sub": db_user.email})
-    return {"access_token": token, "token_type": "bearer"}
+    return {"access_token": token, "token_type": "bearer", "nome": db_user.name}
