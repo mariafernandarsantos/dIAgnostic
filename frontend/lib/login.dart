@@ -71,7 +71,7 @@ class _Login extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 117, 167, 189),
+      backgroundColor: const Color(0xFF6ddbd7),
       body: Center(
         child: SingleChildScrollView(
           child: Column(

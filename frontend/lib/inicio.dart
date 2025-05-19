@@ -1,4 +1,6 @@
+import 'package:diaglogin/upload.dart';
 import 'package:flutter/material.dart';
+import 'package:diaglogin/historico.dart';
 
 class Inicio extends StatefulWidget {
   final String nomeUsuario;
@@ -13,48 +15,46 @@ class _InicioState extends State<Inicio> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 117, 167, 189),
+      backgroundColor: const Color(0xFF6ddbd7),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF6ddbd7),
+        elevation: 0,
+        title: Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(
+                text: 'dIA',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 26,
+                  color: Colors.white,
+                ),
+              ),
+              TextSpan(
+                text: 'gnostic',
+                style: TextStyle(fontSize: 26, color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications_none, size: 24, color: Colors.black),
+            onPressed: () {
+              print('Notificação clicada');
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.mail_outline, size: 24, color: Colors.black),
+            onPressed: () {
+              print('Mensagem clicada');
+            },
+          ),
+          SizedBox(width: 16),
+        ],
+      ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 40, left: 20, right: 20),
-            child: Row(
-              children: [
-                const BackButton(color: Colors.white),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8),
-                    child: const Text(
-                      'dIAgnostic',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.notifications_outlined, color: Colors.white, size: 26),
-                      onPressed: () {
-                        print("Notificação");
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.mail_outlined, color: Colors.white, size: 26),
-                      onPressed: () {
-                        print("Notificação");
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -72,6 +72,11 @@ class _InicioState extends State<Inicio> {
                       children: [
                         Row(
                           children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.white,
+                              child: Icon(Icons.person, color: Colors.grey),
+                            ),
+                            const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 widget.nomeUsuario,
@@ -102,8 +107,13 @@ class _InicioState extends State<Inicio> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                                print('Abriu o historico');
-                              },
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ConsultasPage(nomeUsuario: widget.nomeUsuario),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color.fromARGB(255, 117, 167, 189),
                               foregroundColor: Colors.white,
@@ -155,8 +165,11 @@ class _InicioState extends State<Inicio> {
                   ),
                   const SizedBox(height: 20),
                   InkWell(
-                    onTap: () {
-                      print('clicado');
+                   onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Upload()),
+                      );
                     },
                     borderRadius: BorderRadius.circular(8),
                     child: Container(
@@ -182,7 +195,7 @@ class _InicioState extends State<Inicio> {
                               color: Colors.white,
                             ),
                           ),
-                          const SizedBox(width: 150),
+                          const Spacer(),
                           const Icon(
                             Icons.arrow_forward_ios, 
                             color: Colors.white, 

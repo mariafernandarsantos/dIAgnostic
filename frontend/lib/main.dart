@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:diaglogin/login.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'dart:io';
 
 void main() async{
   await dotenv.load(fileName: "assets/.env");
   runApp(const MainApp());
 }
-
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});

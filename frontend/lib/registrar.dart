@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 
 class Registrar extends StatefulWidget {
   @override
