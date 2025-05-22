@@ -40,7 +40,7 @@ class _Login extends State<Login> {
         // Navegar para a tela inicial
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => Inicio(nomeUsuario: nome)),
+          MaterialPageRoute(builder: (context) => Inicio(nomeUsuario: nome, token: token)),
         );
       } else {
         setState(() {

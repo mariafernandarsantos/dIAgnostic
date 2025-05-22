@@ -4,8 +4,9 @@ import 'package:diaglogin/historico.dart';
 
 class Inicio extends StatefulWidget {
   final String nomeUsuario;
+  final String token;
 
-  const Inicio({super.key, required this.nomeUsuario});
+  const Inicio({super.key, required this.nomeUsuario, required this.token});
 
   @override
   State<Inicio> createState() => _InicioState();
@@ -168,7 +169,7 @@ class _InicioState extends State<Inicio> {
                    onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Upload()),
+                        MaterialPageRoute(builder: (context) => Upload(token: widget.token)),
                       );
                     },
                     borderRadius: BorderRadius.circular(8),
