@@ -1,36 +1,85 @@
-"""
-Serviços de integração com IA para geração de explicações e chat.
-"""
 import base64
 import google.generativeai as genai
-from typing import Optional
-from app.core.config import GEMINI_API_KEY, GEMINI_MODEL
-from app.schemas.prediction import DiabetesInput
+from app.core.config import GEMINI_API_KEY
+from typing import List, Optional
+import json
 
-# Configuração da API Gemini
-if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
+# Configurar Gemini
+print("KEY:",GEMINI_API_KEY)
+genai.configure(api_key=GEMINI_API_KEY)
+gemini_model = genai.GenerativeModel("gemini-2.0-flash")
 
-# Modelo Gemini global
-gemini_model = None
-if GEMINI_API_KEY:
-    gemini_model = genai.GenerativeModel(GEMINI_MODEL)
+async def chat_with_ai(
+    message: str,
+    chat_history: List = None,
+    prediction_history: List = None,
+    user_context = None
+) -> str:
+    """
+    Assistente de IA para apoio à decisão clínica médica.
+    """
+    try:
+        # Contexto médico profissional
+        medical_context = """
+        Você é um sistema de apoio à decisão clínica para médicos, especializado em:
+        - Análise de radiografias torácicas para pneumonia
+        - Avaliação de fatores de risco para diabetes mellitus
+        
+        Forneça:
+        1. Análises concisas baseadas em evidências
+        2. Diferenciais diagnósticos relevantes
+        3. Sugestões de exames complementares quando aplicável
+        4. Referências a guidelines clínicos atualizados
+        """
+
+        # Construir histórico de casos
+        case_history = []
+        if prediction_history:
+            case_history.append("\n**Histórico de Casos Recentes:**")
+            for pred in prediction_history[-3:]:
+                case_history.append(
+                    f"- Caso {pred.prediction_type.upper()}: {pred.result} "
+                    f"(Confiança: {pred.confidence}%)"
+                )
+
+        # Construir diálogo anterior
+        dialog_history = []
+        if chat_history:
+            dialog_history.append("\n**Diálogo Anterior:**")
+            for chat in reversed(chat_history[-5:]):
+                dialog_history.append(f"**Médico:** {chat.message}")
+                dialog_history.append(f"**Sistema:** {chat.response}")
+
+        prompt = f"""
+        {medical_context}
+        
+        {''.join(case_history)}
+        {''.join(dialog_history)}
+        
+        **Consulta Atual:**
+        {message}
+        
+        **Orientações para Resposta:**
+        - Priorize informações clinicamente acionáveis
+        - Destaque achados críticos em negrito
+        - Inclua ESCORE de probabilidade clínica quando relevante
+        - Sugira protocolos de conduta baseados em:
+          * Diretrizes SBPT para pneumonias
+          * Guidelines ADA para diabetes
+        - Mantenha respostas em tópicos numerados
+        - Use linguagem técnica apropriada para médicos
+        """
+
+        response = gemini_model.generate_content(prompt)
+        return response.text
+        
+    except Exception as e:
+        return "Sistema temporariamente indisponível. Por favor, tente novamente."
 
 async def get_pneumonia_explanation(image_bytes: bytes, diagnosis: str, confidence: float) -> str:
-    """
-    Obtém explicação de IA para diagnóstico de pneumonia em português.
-    
-    Args:
-        image_bytes: Bytes da imagem de raio-X.
-        diagnosis: Diagnóstico (PNEUMONIA ou NORMAL).
-        confidence: Pontuação de confiança da predição.
-        
-    Returns:
-        Explicação detalhada em português.
-    """
+    """Gera explicação detalhada para predição de pneumonia."""
     if gemini_model is None:
         return "Explicação detalhada não disponível. API Gemini não configurada."
-
     try:
         # Converter imagem para base64 para Gemini
         base64_image = base64.b64encode(image_bytes).decode('utf-8')
@@ -50,7 +99,7 @@ async def get_pneumonia_explanation(image_bytes: bytes, diagnosis: str, confiden
         4. Informações educativas sobre pneumonia que ajudariam o paciente a entender sua condição
         5. Recomendações gerais para alguém com este diagnóstico
         
-        Mantenha sua resposta profissional, mas acessível para pacientes sem formação médica.
+        Mantenha sua resposta profissional, mas acessível tanto para médicos especializados para auxiliar eles e para pacientes sem formação médica.
         Forneça uma análise abrangente em 3-4 parágrafos.
         
         IMPORTANTE: Responda COMPLETAMENTE em português do Brasil.
@@ -63,109 +112,64 @@ async def get_pneumonia_explanation(image_bytes: bytes, diagnosis: str, confiden
         
         return response.text
     except Exception as e:
-        return f"Não foi possível gerar uma explicação detalhada: {str(e)}"
+        return "Explicação não disponível no momento."
 
-async def get_diabetes_explanation(input_data: DiabetesInput, diagnosis: str, probability: float) -> str:
-    """
-    Obtém explicação de IA para diagnóstico de diabetes em português.
-    
-    Args:
-        input_data: Dados de entrada do paciente.
-        diagnosis: Diagnóstico (POSITIVE ou NEGATIVE).
-        probability: Probabilidade da predição.
-        
-    Returns:
-        Explicação detalhada em português.
-    """
+async def get_diabetes_explanation(input_data, diagnosis: str, probability: float) -> str:
+    """Relatório de avaliação de risco para diabetes"""
     if gemini_model is None:
         return "Explicação detalhada não disponível. API Gemini não configurada."
-
     try:
-        # Criar prompt para Gemini em português
-        diagnosis_pt = "POSITIVO" if diagnosis == "POSITIVE" else "NEGATIVO"
-        
         prompt = f"""
-        Como especialista médico, por favor analise esta previsão de diabetes.
+        **Avaliação de Risco para Diabetes Mellitus**
         
-        O modelo de aprendizado de máquina determinou um diagnóstico {diagnosis_pt} para diabetes com {probability:.2f} de probabilidade.
-        
-        Dados do paciente:
-        - Gestações: {input_data.pregnancies}
-        - Nível de glicose: {input_data.glucose} mg/dL
-        - Pressão arterial: {input_data.blood_pressure} mm Hg
-        - Espessura da pele: {input_data.skin_thickness} mm
-        - Insulina: {input_data.insulin} μU/mL
-        - IMC: {input_data.bmi}
-        - Função pedigree de diabetes: {input_data.diabetes_pedigree}
+        **Dados do Paciente:**
         - Idade: {input_data.age} anos
+        - Glicemia: {input_data.glucose} mg/dL
+        - IMC: {input_data.bmi} kg/m²
+        - Outros fatores de risco: [listar]
         
-        Por favor, forneça:
-        1. Uma explicação detalhada de quais fatores provavelmente contribuíram mais para esta previsão
-        2. Como cada medição se compara aos intervalos saudáveis típicos
-        3. Informações educativas sobre diabetes que ajudariam o paciente a entender a condição
-        4. Recomendações personalizadas com base nestas medições específicas
+        **Resultado da Triagem:**
+        - Risco calculado: {probability:.2%}
+        - Classificação: {diagnosis}
         
-        Mantenha sua resposta profissional, mas acessível para pacientes sem formação médica.
-        Forneça uma análise abrangente em 3-4 parágrafos.
+        **Análise Clínica:**
+        1. **Critérios ADA Preenchidos:**
+        - [Listar critérios atendidos]
         
-        IMPORTANTE: Responda COMPLETAMENTE em português do Brasil.
+        2. **Recomendações:**
+        - Exames laboratoriais complementares:
+            * HbA1c
+            * Curva glicêmica
+            * Perfil lipídico
+        
+        3. **Conduta Sugerida:**
+        - Follow-up em [semanas/meses]
+        - Encaminhamentos sugeridos:
+            * Endocrinologia
+            * Nutrição
+        
+        4. **Orientações para o Paciente:**
+        - Monitoramento domiciliar
+        - Sinais de alerta para emergências
+        - Modificações no estilo de vida
         """
         
-        # Chamar API Gemini
         response = await gemini_model.generate_content_async(prompt)
-        
-        return response.text
+        return format_medical_response(response.text)
     except Exception as e:
-        return f"Não foi possível gerar uma explicação detalhada: {str(e)}"
+        return "Explicação não disponível no momento."
 
-async def chat_with_ai(message: str, context: Optional[dict] = None, history: Optional[list] = None) -> str:
-    """
-    Interage com a IA para responder perguntas sobre tópicos médicos.
+def format_medical_response(text: str) -> str:
+    """Formata a resposta para melhor legibilidade médica"""
+    sections = [
+        "DESCRIÇÃO TÉCNICA",
+        "ANÁLISE COMPARATIVA",
+        "SUGESTÕES",
+        "COMENTÁRIOS ADICIONAIS",
+        "RECOMENDAÇÕES"
+    ]
     
-    Args:
-        message: Mensagem/pergunta do usuário.
-        context: Informações de contexto opcionais (resultados de diagnóstico, etc.).
-        history: Histórico opcional de conversas.
-        
-    Returns:
-        Resposta da IA em português.
-    """
-    if gemini_model is None:
-        return "Chat não disponível. API Gemini não configurada."
-
-    try:
-        # Preparar histórico de conversa se fornecido
-        chat = gemini_model.start_chat(history=[])
-        
-        if history:
-            for msg in history:
-                role = msg.get("role", "user")
-                content = msg.get("content", "")
-                if role == "user":
-                    chat.send_message(content)
-                else:
-                    # Adicionar como resposta do modelo no histórico
-                    chat.history.append({"role": "model", "parts": [content]})
-        
-        # Formatar o prompt com contexto se disponível
-        prompt = message
-        if context:
-            context_str = "\n".join([f"{k}: {v}" for k, v in context.items()])
-            prompt = f"""
-            Pergunta do usuário: {message}
-            
-            Informações de contexto:
-            {context_str}
-            
-            Por favor, forneça uma resposta útil, precisa e educativa à pergunta do usuário.
-            Concentre-se em explicar conceitos médicos em termos simples, mantendo a precisão.
-            
-            IMPORTANTE: Responda COMPLETAMENTE em português do Brasil.
-            """
-        
-        # Obter resposta do Gemini
-        response = await chat.send_message_async(prompt)
-        
-        return response.text, id(chat)
-    except Exception as e:
-        return f"Erro ao processar chat: {str(e)}", None
+    for section in sections:
+        text = text.replace(section, f"\n**{section}**\n")
+    
+    return text

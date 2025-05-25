@@ -197,3 +197,73 @@ O FastAPI gera automaticamente documentação interativa da API:
 3. Use um servidor ASGI de nível de produção como Gunicorn com workers Uvicorn
 4. Implante atrás de um proxy reverso como Nginx
 5. Use variáveis de ambiente para configuração
+
+### Estrutura de pastas do projeto
+```bash
+│   .env
+│   .env.example
+│   .gitignore
+│   main.py
+│   README.md
+│   requirements.txt
+│
+├───app
+│   │   main.py
+│   │   __init__.py
+│   │
+│   ├───api
+│   │   │   __init__.py
+│   │   │
+│   │   └───routes
+│   │           auth.py
+│   │           chat.py
+│   │           predict.py
+│   │           __init__.py
+│   │
+│   ├───core
+│   │       config.py
+│   │       security.py
+│   │       __init__.py
+│   │
+│   ├───crud
+│   │       chat.py
+│   │       predict.py
+│   │       user.py
+│   │
+│   ├───db
+│   │       base.py
+│   │       database.py
+│   │       __init__.py
+│   │
+│   ├───models
+│   │       chat_history.py
+│   │       predict_history.py
+│   │       user.py
+│   │       __init__.py
+│   │
+│   ├───schemas
+│   │       prediction.py
+│   │       user.py
+│   │       __init__.py
+│   │
+│   ├───services
+│   │       ai.py
+│   │       prediction.py
+│   │       __init__.py
+│   │
+│   └───utils
+│           authUtils.py
+│           image.py
+│           __init__.py
+│
+├───experiments
+│       groq_integration_draft.py
+│       huggingface_test.py
+│
+├───ml_models
+│       diabetes_model.sav
+│       diabetes_scaler.sav
+│       pneumonia_detection_model.h5
+│
+└───scripts
+        test_api.py

@@ -1,6 +1,6 @@
 from groq import Groq
 
-client = Groq()
+client = Groq(api_key="")
 completion = client.chat.completions.create(
     model="meta-llama/llama-4-scout-17b-16e-instruct",
     messages=[

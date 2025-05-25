@@ -19,12 +19,18 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./diagnostic.db")
 
 # Configurações de segurança
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-chave-fraca")
-ALGORITHM = "HS256"
+ALGORITHM = "HS256" 
 TOKEN_EXPIRATION_MINUTES = 60
 
 # Configurações da API Gemini
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = "gemini-1.5-pro"
+
+# File Upload
+UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "uploads")
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+
+MODELS_FOLDER = os.getenv("MODELS_FOLDER", "ml_models")
 
 # Caminhos para os modelos de ML
 ML_MODELS_DIR = "ml_models"

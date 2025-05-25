@@ -3,7 +3,6 @@ from sqlalchemy.orm import declarative_base
 from app.core.config import DATABASE_URL
 
 DATABASE_URL = DATABASE_URL.replace("sqlite://", "sqlite+aiosqlite://")
-print("DATAKAJLSKDJKF", DATABASE_URL)
 # Cria o engine assíncrono
 engine = create_async_engine(
     DATABASE_URL,

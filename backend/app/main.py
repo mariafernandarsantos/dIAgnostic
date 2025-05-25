@@ -19,6 +19,7 @@ from app.db.database import engine
 from app.api import api_router
 from app.services.prediction import load_ml_models, get_models_status
 from app.db.base import Base
+import os
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -38,7 +39,12 @@ async def lifespan(app: FastAPI):
         print("Modelos de ML carregados com sucesso!")
     else:
         print("Falha ao carregar alguns modelos de ML!")
-    
+
+    # Criar diretório de uploads se não existir
+    os.makedirs("uploads", exist_ok=True)
+    print("Diretório de uploads configurado")
+
+        
     yield  # App executa aqui
     
     # Shutdown

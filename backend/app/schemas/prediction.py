@@ -1,11 +1,9 @@
-"""
-Esquemas de validação para predições e chat.
-"""
 from typing import Optional, Dict, Any, List
+from pydantic import BaseModel
+from datetime import datetime
 from pydantic import BaseModel
 
 class DiabetesInput(BaseModel):
-    """Esquema para entrada de predição de diabetes."""
     pregnancies: int
     glucose: int
     blood_pressure: int
@@ -14,32 +12,53 @@ class DiabetesInput(BaseModel):
     bmi: float
     diabetes_pedigree: float
     age: int
-    get_explanation: bool = False  # Flag opcional para solicitar explicação detalhada
+    get_explanation: bool = False
 
 class ChatRequest(BaseModel):
-    """Esquema para solicitação de chat."""
     message: str
+    session_id: Optional[str] = None
     context: Optional[Dict[str, Any]] = None
-    history: Optional[List[Dict[str, Any]]] = None
 
 class PredictionResponse(BaseModel):
-    """Esquema base para respostas de predição."""
     diagnosis: str
     explanation: Optional[str] = None
 
 class PneumoniaPredictionResponse(PredictionResponse):
-    """Esquema para resposta de predição de pneumonia."""
     filename: str
     confidence: float
     raw_prediction: float
     mensagem: str
 
 class DiabetesPredictionResponse(PredictionResponse):
-    """Esquema para resposta de predição de diabetes."""
     probability: float
     message: str
 
 class ChatResponse(BaseModel):
-    """Esquema para resposta de chat."""
     response: str
-    conversation_id: str
+    session_id: str
+
+class ChatHistoryResponse(BaseModel):
+    id: str
+    session_id: str
+    message: str
+    response: str
+    message_type: str
+    timestamp: str
+
+class PredictionHistoryResponse(BaseModel):
+    id: str
+    type: str
+    result: str
+    confidence: float
+    timestamp: str
+    additional_notes: Optional[str] = None
+    doctor_reviewed: bool
+    doctor_notes: Optional[str] = None
+
+class PredictionStatsResponse(BaseModel):
+    diabetes: dict
+    pneumonia: dict
+
+class PredictionReview(BaseModel):
+    notes: str
+    confirmed: bool
