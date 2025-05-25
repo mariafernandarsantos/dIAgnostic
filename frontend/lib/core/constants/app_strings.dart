@@ -1,0 +1,32 @@
+class AppStrings {
+  static const String appName = 'dIAgnostic';
+  static const String loginTitle = 'Fazer Login';
+  static const String registerTitle = 'Criar Conta';
+  static const String email = 'Email';
+  static const String password = 'Senha';
+  static const String name = 'Nome completo';
+  static const String phone = 'Telefone celular';
+  static const String birthDate = 'Data Nascimento';
+  static const String gender = 'Gênero';
+  static const String rememberMe = 'Lembrar-me';
+  static const String forgotPassword = 'Esqueceu a senha?';
+  static const String noAccount = 'Ainda não possui conta? ';
+  static const String signUpHere = 'Se inscreva aqui!';
+  static const String openProfile = 'Abrir perfil';
+  static const String consultHistory = 'Histórico de Consultas';
+  static const String myConsultations = 'Minhas consultas';
+  static const String noConsultations = 'Nenhuma consulta disponível no momento.';
+  static const String dengueAlert = 'Alerta de Dengue';
+  static const String dengueMessage = 'Os casos de dengue estão aumentando na região. Elimine qualquer foco de água parada, mantenha caixas d\'água bem tampadas e use repelente diariamente. Cuide da sua saúde e ajude a prevenir a doença!';
+  static const String appDescription = 'O dIAgnostic é um app com intuito de auxiliar o médico durante o processo de análise de exames clínicos.';
+  static const String examResults = 'Resultados do exame';
+  static const String selectImage = 'Selecionar imagem';
+  static const String sendImage = 'Enviar imagem';
+  static const String sendDiabetesData = 'Enviar dados de diabetes';
+  static const String noImageSelected = 'Nenhuma imagem selecionada';
+  static const String requiredField = 'Campo obrigatório';
+  static const String fillAllFields = 'Por favor, preencha todos os campos obrigatórios';
+  static const String registrationSuccess = 'Registro realizado com sucesso!';
+  static const String imageAnalyzedSuccess = 'Imagem enviada e analisada com sucesso!';
+  static const String dataAnalyzedSuccess = 'Dados enviados e analisados com sucesso!';
+}

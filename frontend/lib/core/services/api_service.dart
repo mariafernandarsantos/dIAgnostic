@@ -1,15 +1,16 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:io';
-import 'package:http_parser/http_parser.dart'; 
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../constants/app_endpoints.dart';
 
 class ApiService {
   static final String? _baseUrl = dotenv.env['API_BASE_URL'];
 
   static Future<Map<String, dynamic>> login(String email, String password) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl/auth/login'),
+      Uri.parse('$_baseUrl${ApiEndpoints.login}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'email': email,
@@ -25,7 +26,7 @@ class ApiService {
   }
 
   static Future<http.Response> register(String nome, String email, String senha) async {
-    final url = Uri.parse('$_baseUrl/auth/register');
+    final url = Uri.parse('$_baseUrl${ApiEndpoints.register}');
 
     final response = await http.post(
       url,
@@ -40,12 +41,11 @@ class ApiService {
     return response;
   }
 
-  // Predição de Pneumonia 
   static Future<Map<String, dynamic>> predictPneumonia({
     required File imageFile,
     required String token,
   }) async {
-    final uri = Uri.parse('$_baseUrl/predict/pneumonia?get_explanation=true');
+    final uri = Uri.parse('$_baseUrl${ApiEndpoints.predictPneumonia}?get_explanation=true');
 
     String mimeType = imageFile.path.endsWith('.png') ? 'png' : 'jpeg';
 
@@ -69,20 +69,19 @@ class ApiService {
     }
   }
 
-  // Predição de Diabetes
   static Future<Map<String, dynamic>> predictDiabetes({
-  required String token,
-  required int pregnancies,
-  required int glucose,
-  required int bloodPressure,
-  required int skinThickness,
-  required int insulin,
-  required double bmi,
-  required double diabetesPedigree,
-  required int age,
-  bool getExplanation = true, // Sempre true
+    required String token,
+    required int pregnancies,
+    required int glucose,
+    required int bloodPressure,
+    required int skinThickness,
+    required int insulin,
+    required double bmi,
+    required double diabetesPedigree,
+    required int age,
+    bool getExplanation = true,
   }) async {
-    final url = Uri.parse('$_baseUrl/predict/diabetes');
+    final url = Uri.parse('$_baseUrl${ApiEndpoints.predictDiabetes}');
 
     final body = {
       "pregnancies": pregnancies,
@@ -109,6 +108,35 @@ class ApiService {
       return jsonDecode(response.body);
     } else {
       throw Exception('Erro na predição de diabetes: ${response.body}');
+    }
+  }
+
+  static Future<List<Map<String, dynamic>>> getPredictionHistory({
+    required String token,
+    String? predictionType, // 'pneumonia', 'diabetes' ou null
+    int limit = 20,
+  }) async {
+    final queryParams = {
+      if (predictionType != null) 'prediction_type': predictionType,
+      'limit': limit.toString(),
+    };
+
+    final uri = Uri.parse('$_baseUrl${ApiEndpoints.predictHistory}')
+        .replace(queryParameters: queryParams);
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Erro ao buscar histórico: ${response.body}');
     }
   }
 }

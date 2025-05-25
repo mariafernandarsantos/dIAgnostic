@@ -48,3 +48,55 @@ flutter pub get
 
 - Na tela inicial, logo abaixo do perfil do usuário selecionar "Histórico de Consultas"
 - Serão exibidias todas as consultas feitas, e o usuário poderá revê-las novamente caso desejado.
+
+### Estrutura de pastas do projeto
+```bash
+lib/
+├── core/
+│   ├── constants/
+│   │   ├── app_colors.dart
+│   │   ├── app_strings.dart
+│   │   └── api_endpoints.dart
+│   ├── services/
+│   │   ├── api_service.dart
+│   │   ├── auth_service.dart
+│   │   └── storage_service.dart
+│   └── utils/
+│       ├── validators.dart
+│       └── helpers.dart
+├── models/
+│   ├── user_model.dart
+│   ├── prediction_result.dart
+│   └── diabetes_data.dart
+├── screens/
+│   ├── auth/
+│   │   ├── login_screen.dart
+│   │   ├── register_screen.dart
+│   │   └── recovery_screen.dart
+│   ├── home/
+│   │   ├── home_screen.dart
+│   │   └── widgets/
+│   │       ├── user_info_card.dart
+│   │       ├── alert_card.dart
+│   │       └── diagnostic_card.dart
+│   ├── diagnostic/
+│   │   ├── upload_screen.dart
+│   │   └── widgets/
+│   │       ├── pneumonia_form.dart
+│   │       ├── diabetes_form.dart
+│   │       └── result_card.dart
+│   └── history/
+│       ├── history_screen.dart
+│       └── widgets/
+│           └── consultation_card.dart
+├── widgets/
+│   ├── common/
+│   │   ├── custom_button.dart
+│   │   ├── custom_text_field.dart
+│   │   ├── loading_widget.dart
+│   │   └── app_bar_widget.dart
+│   └── forms/
+│       ├── number_field.dart
+│       └── dropdown_field.dart
+└── main.dart
+```
