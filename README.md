@@ -57,7 +57,7 @@ Este aplicativo não tem a intenção de medicar ou diagnosticar doenças, mas s
 - **Flutter**
 - **Python**
 - **Jupyter**
-- **MySQL**
+- **SQLite**
 
 ---
 
@@ -70,7 +70,7 @@ Para rodar o projeto localmente, é necessário ter as seguintes ferramentas ins
 - [Dart](https://dart.dev/get-dart)
 - [Android Studio](https://developer.android.com/studio)
 - [Python](https://www.python.org/downloads/)
-- [MySQL](https://dev.mysql.com/downloads/)
+- [SQLite](https://dev.mysql.com/downloads/)
 
 ### Instalação:
 
