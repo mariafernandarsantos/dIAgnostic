@@ -53,6 +53,7 @@ class PredictionHistoryResponse(BaseModel):
     timestamp: str
     additional_notes: Optional[str] = None
     doctor_reviewed: bool
+    confirmed_by_doctor: bool
     doctor_notes: Optional[str] = None
 
 class PredictionStatsResponse(BaseModel):

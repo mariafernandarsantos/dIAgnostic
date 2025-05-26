@@ -139,4 +139,33 @@ class ApiService {
       throw Exception('Erro ao buscar histórico: ${response.body}');
     }
   }
+
+  static Future<Map<String, dynamic>> addPredictionReview({
+    required String token,
+    required String predictionId,
+    required String notes,
+    required bool confirmed,
+  }) async {
+    final url = Uri.parse('$_baseUrl${ApiEndpoints.predictReview(predictionId)}');
+
+    final body = {
+      "notes": notes,
+      "confirmed": confirmed,
+    };
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(body),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Erro ao adicionar revisão médica: ${response.body}');
+    }
+  }
 }

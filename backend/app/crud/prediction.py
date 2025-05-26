@@ -108,6 +108,7 @@ async def add_doctor_review(
         raise HTTPException(status_code=404, detail="Predição não encontrada")
     
     prediction.is_doctor_reviewed = True
+    prediction.confirmed_by_doctor = confirmed
     prediction.doctor_notes = notes
     
     await db.commit()

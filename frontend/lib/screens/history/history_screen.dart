@@ -8,6 +8,7 @@ import '../../../widgets/common/custom_app_bar.dart';
 import '../../../widgets/common/loading_widget.dart';
 import '../../core/services/api_service.dart';
 import '../../core/services/auth_service.dart';
+import 'add_review_screen.dart';
 import 'widgets/consultation_card.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -449,7 +450,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
             ),
             const SizedBox(height: 20),
             
-            // Título
+            // Título com botão de revisão - AQUI ESTÁ A MUDANÇA PRINCIPAL
             Row(
               children: [
                 Icon(
@@ -459,18 +460,52 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
                   color: AppColors.primary,
                 ),
                 const SizedBox(width: 8),
-                const Text(
-                  'Detalhes da Consulta',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                const Expanded(
+                  child: Text(
+                    'Detalhes da Consulta',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                // BOTÃO PARA ADICIONAR REVISÃO MÉDICA
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    Navigator.pop(context); // Fecha o modal atual
+                    
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddReviewScreen(
+                          consultation: consultation,
+                        ),
+                      ),
+                    );
+                    
+                    // Se a revisão foi adicionada com sucesso, recarrega a lista
+                    if (result == true) {
+                      _loadConsultations();
+                    }
+                  },
+                  icon: const Icon(Icons.medical_services, size: 16),
+                  label: const Text(
+                    'Adicionar\nRevisão',
+                    style: TextStyle(fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.secondary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    minimumSize: const Size(80, 50),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 20),
             
-            // Conteúdo
+            // Conteúdo (mantém o mesmo código que você já tem)
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -480,6 +515,7 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
                     _buildDetailRow('Resultado', consultation.result),
                     _buildDetailRow('Data', consultation.timestamp.toLocal().toString()),
                     _buildDetailRow('Revisado por médico', consultation.doctorReviewed ? 'Sim' : 'Não'),
+                    _buildDetailRow('Confirmação médica da predição', consultation.doctorConfirmed ? 'Confirmada' : 'Não confirmada'),
                     _buildDetailRow('Notas do médico', consultation.doctorNotes ?? 'Nenhuma nota disponível'),
                     if (consultation.confidence != null)
                       _buildDetailRow(
@@ -515,20 +551,51 @@ class _HistoryScreenState extends State<HistoryScreen> with SingleTickerProvider
               ),
             ),
             
-            // Botão fechar
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+            // Botões na parte inferior
+            Row(
+              children: [
+                // Botão para fechar
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[300],
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    child: const Text('Fechar'),
+                  ),
                 ),
-                child: const Text(
-                  'Fechar',
-                  style: TextStyle(color: Colors.white),
+                const SizedBox(width: 12),
+                // Botão alternativo para adicionar revisão (caso prefira aqui)
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      Navigator.pop(context); // Fecha o modal atual
+                      
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddReviewScreen(
+                            consultation: consultation,
+                          ),
+                        ),
+                      );
+                      
+                      if (result == true) {
+                        _loadConsultations();
+                      }
+                    },
+                    icon: const Icon(Icons.medical_services),
+                    label: const Text('Revisão Médica'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.secondary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ],
         ),

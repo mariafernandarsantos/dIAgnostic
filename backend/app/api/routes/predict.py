@@ -198,6 +198,7 @@ async def get_prediction_history(
             "timestamp": pred.timestamp.isoformat(),
             "additional_notes": pred.additional_notes,
             "doctor_reviewed": pred.is_doctor_reviewed,
+            "confirmed_by_doctor": pred.confirmed_by_doctor,
             "doctor_notes": pred.doctor_notes
         }
         for pred in predictions

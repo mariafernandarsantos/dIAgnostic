@@ -15,6 +15,7 @@ class PredictionHistory(Base):
     additional_notes = Column(Text, nullable=True)   # Notas adicionais/explicação
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
     is_doctor_reviewed = Column(Boolean, default=False)  # Foi revisado por médico?
+    confirmed_by_doctor = Column(Boolean, default=False)  # Revisão confirmada pelo médico
     doctor_notes = Column(Text, nullable=True)       # Anotações do médico
 
     user = relationship("User", back_populates="prediction_history")

@@ -1,4 +1,5 @@
 class PredictionResult {
+  final String id;
   final String diagnosis;
   final String result;
   final double? confidence;
@@ -7,9 +8,11 @@ class PredictionResult {
   final String? filename;
   final DateTime timestamp;
   final bool doctorReviewed;
+  final bool doctorConfirmed;
   final String? doctorNotes;
 
   PredictionResult({
+    required this.id,
     required this.diagnosis,
     required this.result,
     this.confidence,
@@ -18,11 +21,13 @@ class PredictionResult {
     this.filename,
     required this.timestamp,
     this.doctorReviewed = false,
+    this.doctorConfirmed = false,
     this.doctorNotes,
   });
 
   factory PredictionResult.fromJson(Map<String, dynamic> json) {
     return PredictionResult(
+      id: json['id'] ?? '-',
       diagnosis: json['type'] ?? '-',
       result: json['result'] ?? '-',
       confidence: json['confidence']?.toDouble(),
@@ -33,12 +38,14 @@ class PredictionResult {
           ? DateTime.parse(json['timestamp'])
           : DateTime.now(),
       doctorReviewed: json['doctor_reviewed'] ?? false,
+      doctorConfirmed: json['confirmed_by_doctor'] ?? false,
       doctorNotes: json['doctor_notes'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'diagnosis': diagnosis,
       'result': result,
       'confidence': confidence,
@@ -47,6 +54,7 @@ class PredictionResult {
       'filename': filename,
       'timestamp': timestamp.toIso8601String(),
       'doctor_reviewed': doctorReviewed,
+      'confirmed_by_doctor': doctorConfirmed,
       'doctor_notes': doctorNotes,
     };
   }
