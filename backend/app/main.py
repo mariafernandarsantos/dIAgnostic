@@ -17,7 +17,7 @@ from app.core.config import (
 
 from app.db.database import engine
 from app.api import api_router
-from app.services.prediction import load_ml_models, get_models_status
+from app.services.prediction import get_models_status
 from app.db.base import Base
 import os
 
@@ -33,12 +33,6 @@ async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     print("Tabelas criadas com sucesso!")
-    
-    # Carregar modelos de ML
-    if load_ml_models():
-        print("Modelos de ML carregados com sucesso!")
-    else:
-        print("Falha ao carregar alguns modelos de ML!")
 
     # Criar diretório de uploads se não existir
     os.makedirs("uploads", exist_ok=True)

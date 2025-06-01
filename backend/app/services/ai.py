@@ -5,7 +5,6 @@ from typing import List, Optional
 import json
 
 # Configurar Gemini
-print("KEY:",GEMINI_API_KEY)
 genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel("gemini-2.0-flash")
 
