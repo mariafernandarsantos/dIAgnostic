@@ -75,11 +75,15 @@ Para rodar o projeto localmente, é necessário ter as seguintes ferramentas ins
 ### Instalação:
 
 1. Clone este repositório:
-   ```bash
-   git clone https://github.com/seuusuario/dIAgnostic.git
+```bash
+git clone https://github.com/seuusuario/dIAgnostic.git
+```
 
 2. Siga os passos para instalação de dependências nos outros 'ReadMe' do projetos localizados nos seguintes caminhos:
-  ```bash
- dIAgnostic/backend/README.md
- dIAgnostic/frontend/README.md
-  ```
+```bash
+dIAgnostic/backend/README.md
+dIAgnostic/frontend/README.md
+```
+
+### Explicação técnica em vídeo
+- link: https://youtu.be/12HON_I4xSg
